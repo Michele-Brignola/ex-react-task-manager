@@ -22,8 +22,6 @@ const TaskRow = memo(function TaskRow({ task }) {
 
 export default function TaskListPage() {
    const { tasks } = useGlobalContext();
-   console.log(tasks);
-
    return (
       <>
          <title>Lista Task</title>
@@ -39,9 +37,8 @@ export default function TaskListPage() {
                   </tr>
                </thead>
                <tbody>
-                  {tasks.map((task) => (
-                     <TaskRow key={task.id} task={task} />
-                  ))}
+                  {tasks &&
+                     tasks.map((task) => <TaskRow key={task.id} task={task} />)}
                </tbody>
             </table>
          </div>
