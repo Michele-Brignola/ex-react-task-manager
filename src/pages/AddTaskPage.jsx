@@ -1,6 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
+import { useGlobalContext } from "../hooks/useGlobalContext";
 
 export default function AddTaskPage() {
+   const { addTask } = useGlobalContext();
+
    // Stati e Ref
    const [title, setTitle] = useState("");
    const descriptionRef = useRef();
@@ -8,23 +11,38 @@ export default function AddTaskPage() {
 
    const symbols = "!@#$%^&*()-_=+[]{}|;:'\",.<>?/`~";
 
-   const handleSubmit = (e) => {
-      e.preventDefault();
-
-      if (
-         title.trim().length <= 0 ||
-         [...title].some((c) => symbols.includes(c))
-      ) {
-         console.error("Title non valido.");
-         return;
+   const taskTitleError = useMemo(() => {
+      if (title.trim().length <= 0) {
+         return "nome task non può essere vuoto";
       }
+      if ([...title].some((c) => symbols.includes(c))) {
+         return "nome task non può contenere simboli";
+      }
+   }, [title]);
 
-      console.log(`
-         Dati form:
-         - Title: ${title.trim()}
-         - Description: ${descriptionRef.current.value.trim()}
-         - Status: ${statusRef.current.value.trim()}
-      `);
+   const resetForm = () => {
+      setTitle("");
+      descriptionRef.current.value = "";
+      statusRef.current.value = "";
+   };
+
+   const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (taskTitleError) return;
+
+      const newTask = {
+         title: title.trim(),
+         description: descriptionRef.current.value.trim(),
+         status: statusRef.current.value.trim(),
+      };
+
+      try {
+         await addTask(newTask);
+         alert("task creata con successo");
+         resetForm();
+      } catch (err) {
+         alert(err.message);
+      }
    };
 
    return (
