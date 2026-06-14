@@ -7,9 +7,9 @@ export default function Header() {
    ];
 
    return (
-      <header className="bg-light sticky-top shadow-sm">
+      <header className="bg-danger sticky-top shadow-sm mb-2">
          <nav className="navbar navbar-expand-lg navbar-light container">
-            <Link to="/" className="navbar-brand fw-bold text-danger fs-4">
+            <Link to="/" className="navbar-brand fw-bold text-white fs-4">
                Header
             </Link>
 
@@ -33,7 +33,7 @@ export default function Header() {
                      <li key={id} className="nav-item">
                         <NavLink
                            to={to}
-                           className="nav-link text-danger fw-semibold"
+                           className="nav-link text-white fw-semibold"
                         >
                            {label}
                         </NavLink>

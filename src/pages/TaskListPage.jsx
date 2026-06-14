@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { Link } from "react-router-dom";
 import { useGlobalContext } from "../hooks/useGlobalContext";
 
 const TaskRow = memo(function TaskRow({ task }) {
@@ -11,7 +12,9 @@ const TaskRow = memo(function TaskRow({ task }) {
    return (
       <tr>
          <th scope="row">{task.id}</th>
-         <td>{task.title}</td>
+         <td>
+            <Link to={"/task/" + task.id}>{task.title}</Link>
+         </td>
          <td className={statusClass[task.status] ?? "text-secondary"}>
             {task.status}
          </td>
