@@ -22,7 +22,19 @@ export const useTasks = () => {
       setTasks((prev) => [...prev, task]);
    };
 
-   const removeTask = () => {};
+   const removeTask = async (taskId) => {
+      const res = await fetch(
+         import.meta.env.VITE_BACKEND_URL + "/tasks/" + taskId,
+         {
+            method: "DELETE",
+         },
+      );
+      const { success, message } = await res.json();
+      if (!success) throw new Error(message);
+
+      setTasks((prev) => prev.filter((t) => t.id !== taskId));
+   };
+
    const updateTask = () => {};
 
    return { tasks, addTask, removeTask, updateTask };
