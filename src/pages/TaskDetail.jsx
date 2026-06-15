@@ -3,13 +3,15 @@ import { useState } from "react";
 import { useGlobalContext } from "../hooks/useGlobalContext";
 // Components
 import Modal from "../components/Modal";
+import EditTaskModal from "../components/EditTaskModal";
 
 export default function TaskDetail() {
    const { id } = useParams();
    const navigate = useNavigate();
-   const { tasks, removeTask } = useGlobalContext();
+   const { tasks, removeTask, updateTask } = useGlobalContext();
 
    const [showDeleteModal, setShowDeleteModal] = useState(false);
+   const [showEditModal, setShowEditModal] = useState(false);
 
    const task = tasks.find((t) => t.id == id);
 
@@ -18,6 +20,16 @@ export default function TaskDetail() {
          await removeTask(task.id);
          alert("Task eliminata con successo");
          navigate("/");
+      } catch (err) {
+         console.error(err);
+         alert(err.message);
+      }
+   };
+
+   const handleUpdate = async (updatedTask) => {
+      try {
+         await updateTask(updatedTask);
+         setShowEditModal(false);
       } catch (err) {
          console.error(err);
          alert(err.message);
@@ -49,8 +61,15 @@ export default function TaskDetail() {
             >
                Elimina Task
             </button>
+            <button
+               className="btn btn-primary"
+               onClick={() => setShowEditModal(true)}
+            >
+               Modifica
+            </button>
          </div>
-         {/* Modale */}
+
+         {/* Delete Modal */}
          <Modal
             title="Conferma Eliminazione"
             content={<p>Sei sicuro di voler eliminare la task?</p>}
@@ -58,6 +77,14 @@ export default function TaskDetail() {
             onClose={() => setShowDeleteModal(false)}
             onConfirm={handleDelete}
             confirmText="Elimina"
+         />
+
+         {/* Edit Modal */}
+         <EditTaskModal
+            task={task}
+            show={showEditModal}
+            onClose={() => setShowEditModal(false)}
+            onSave={handleUpdate}
          />
       </>
    );
